@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import my_utils.print_utils as my_prints
 
+
 def display_cam():
     cap = cv2.VideoCapture(1)
 
@@ -36,7 +37,6 @@ def print_cam_info(cap, isPrint=False):
         print("width : "+str(width))
         print("height: "+str(height))
         print("fps   : "+str(fps))
-
 
 
     return width, height, fps
