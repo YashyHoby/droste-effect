@@ -8,7 +8,7 @@ X_OFFSET_ADJUSTMENT = 100 # 0~100
 Y_OFFSET_ADJUSTMENT = 0 # 0~100
 REDUCTION_SCALE_PERCENT = 75 # 0~100
 DOT_THRESHOLD = 124 # 0~255
-FRAME_RATE = 2 # 1~カメラフレームレート
+FRAME_RATE = 30 # 1~カメラフレームレート
 
 class CameraProcessor:
     def __init__(self, camera_index=0):
@@ -21,7 +21,7 @@ class CameraProcessor:
         self.frame_count = 1
         self.cam_width = cv2.CAP_PROP_FRAME_WIDTH
         self.cam_height = cv2.CAP_PROP_FRAME_HEIGHT
-        self.cam_fps = cv2.CAP_PROP_FPS
+        self.cam_fps = self.cap.get(cv2.CAP_PROP_FPS)
         self.skip_frame_num = int(self.cam_fps / FRAME_RATE)
 
         if not self.cap.isOpened():
@@ -47,7 +47,6 @@ class CameraProcessor:
             ret, self.new_frame = self.cap.read()
             
             if self.handle_fps():
-                print("a")
                 continue
 
             if not ret:
@@ -149,7 +148,7 @@ class CameraProcessor:
         return isExit
     
     def handle_fps(self):
-        if self.frame_count > self.skip_frame_num:
+        if self.frame_count >= self.skip_frame_num:
             self.frame_count = 1
             return False
         
@@ -161,6 +160,7 @@ class CameraProcessor:
         print("width : "+str(self.cam_width))
         print("height: "+str(self.cam_height))
         print("fps   : "+str(self.cam_fps))
+        print("skip frame num   : "+str(self.skip_frame_num))
 
     # プログラム終了前処理
     def exit_process(self, text=""):
